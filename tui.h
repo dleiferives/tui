@@ -3,6 +3,9 @@
 #include <stdlib.h>
 // This is written for linux, bash really. If it does not work for you I am very sorry
 
+#ifndef dleiferives_tui
+#define dleiferives_tui
+
 typedef struct{
 	int width;
 	int height;
@@ -42,13 +45,17 @@ void Terminal_t_create(Terminal_t * t)
 		fprintf(stderr, "could not read the size of terminal");
 		exit(1);
 	}
-	tputs(tiparm(tigetstr("civis")), 1, putchar);
 }
 
-void Terminal_t_destroy(Terminal_t * t)
+void Terminal_t_destroy()
 {
 	tputs(tigetstr("rmcup"), 1, putchar);
 	tputs(tiparm(tigetstr("cnorm")), 1, putchar);
+}
+
+void Terminal_t_cursor_invis(void)
+{
+	tputs(tiparm(tigetstr("civis")),1,putchar);
 }
 
 void Terminal_t_move_cursor(Terminal_t *t, unsigned short x, unsigned y)
@@ -66,15 +73,12 @@ void Terminal_t_delete_lines(Terminal_t *t,int n)
 	tputs(tiparm(tigetstr("dl"),n),1,putchar);
 }
 
-
-int main()
+void Terminal_t_clear_to_screen_end(Terminal_t *t)
 {
-	Terminal_t t = Terminal_t_init();
-	Terminal_t_create(&t);
-	getchar();
-	Terminal_t_destroy(&t);
-
-     
-    return 0;
+	tputs(tiparm(tigetstr("ed")),1,putchar);
 }
-
+void Terminal_t_clear_to_l_end(Terminal_t *t)
+{
+	tputs(tiparm(tigetstr("el")),1,putchar);
+}
+#endif
