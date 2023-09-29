@@ -45,11 +45,11 @@ Here's a basic example of how to use the `tui.h` library in your C program:
 
 int main() {
     // Initialize the terminal
-    Terminal_t term = Terminal_t_init();
+    Terminal_t term = Terminal_t_init(void);
     Terminal_t_create(&term);
 
     // Make the cursor invisible
-    Terminal_t_cursor_invis(&term);
+    Terminal_t_cursor_invis(void);
 
     // Move the cursor to position (5, 10)
     Terminal_t_move_cursor(&term, 5, 10);
@@ -67,7 +67,7 @@ int main() {
     Terminal_t_clear_to_screen_end(&term);
 
     // Destroy the terminal and reset cursor
-    Terminal_t_destroy();
+    Terminal_t_destroy(void);
 
     return 0;
 }
