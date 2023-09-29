@@ -2,7 +2,7 @@
 
 ![GitHub](https://img.shields.io/github/license/dleiferives/tui)
 
-tui.h is a minimal C library for creating terminal-based applications. This library simplifies terminal application development by providing basic functionality for terminal manipulation. It relies on `term.h`, which uses `terminfo` and therefore the  `ncurses` library for terminal handling.
+tui.h is a minimal C library for creating terminal-based applications. The library makes it easy to acces low level calls to the terminal, and removes parts of that 'black box' style which those calls tend to be. It relies on `term.h`, which uses `terminfo` and therefore the  `ncurses` library for terminal handling.
 
 ## Table of Contents
 
