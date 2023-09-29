@@ -91,7 +91,3 @@ int main() {
 - Reduce dependencies on `ncurses` and retrieve information directly from the terminal or SSH connection.
 - Handle errors gracefully if they occur.
 
-## Contributing
-
-Contributions are welcome! If you have suggestions, bug reports, or would like to contribute code, please feel free to open an issue or create a pull request.
-
