@@ -1,27 +1,80 @@
 #include <stdio.h>
 #include <term.h>
-// This is written for linux, bash really. If it does not work for you I am very sorry :(
-static const char * AEC = "\33[";
+#include <stdlib.h>
+// This is written for linux, bash really. If it does not work for you I am very sorry
 
-void move_cursor_to(unsigned short x, unsigned short y)
+typedef struct{
+	int width;
+	int height;
+	char * buffer;
+	char * rep_buffer;
+	char * cu;
+}Terminal_t;
+
+Terminal_t Terminal_t_init(void)
 {
-	printf("%s%d;%dH",AEC,x+1,y+1);
+	Terminal_t result;
+	result.width = 0;
+	result.height =0;
+	result.buffer = NULL;
+	result.rep_buffer =NULL;
+	result.cu = NULL;
+	return result;
 }
+
+void Terminal_t_create(Terminal_t * t)
+{
+	if(setupterm(0, 1, 0))
+	{
+		fprintf(stderr, "setupterm failed");
+		exit(1);
+	}
+	if(!(t->cu = tigetstr("cup")))
+	{
+		fprintf(stderr, "no cursor addressing in terminal");
+		exit(1);
+	}
+	tputs(tigetstr("smcup"), 1, putchar);
+	t->width = tigetnum((char *)"cols");
+	t->height = tigetnum((char *)"lines");
+	if ((t->width < 1) || (t->height < 1))
+	{
+		fprintf(stderr, "could not read the size of terminal");
+		exit(1);
+	}
+	tputs(tiparm(tigetstr("civis")), 1, putchar);
+}
+
+void Terminal_t_destroy(Terminal_t * t)
+{
+	tputs(tigetstr("rmcup"), 1, putchar);
+	tputs(tiparm(tigetstr("cnorm")), 1, putchar);
+}
+
+void Terminal_t_move_cursor(Terminal_t *t, unsigned short x, unsigned y)
+{
+	tputs(tiparm(t->cu, y, x), 1, putchar);
+}
+
+void Terminal_t_repeat_char(Terminal_t *t,char c, int n)
+{
+	tputs(tiparm(tigetstr("rep"),c,n), 1, putchar);
+}
+
+void Terminal_t_delete_lines(Terminal_t *t,int n)
+{
+	tputs(tiparm(tigetstr("dl"),n),1,putchar);
+}
+
+
 int main()
 {
-    printf("%s2J", AEC);
-    move_cursor_to(0,0);
-    for(int i =0;i<1000; i++)
-    {
-	    putchar('d');
-	    putchar('i');
-    }
-    printf("%s=0h",AEC);
+	Terminal_t t = Terminal_t_init();
+	Terminal_t_create(&t);
+	getchar();
+	Terminal_t_destroy(&t);
 
-
-    putchar(10);
-
-    printf("%d\n",);
+     
     return 0;
 }
 
